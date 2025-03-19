@@ -11,7 +11,6 @@ from watchdog.events import FileSystemEventHandler
 from torchvision.transforms.functional import normalize
 import torchvision.transforms.functional as TF
 
-# Load configuration
 with open("config.json", "r") as config_file:
     config = json.load(config_file)
 
@@ -20,7 +19,6 @@ OUTPUT_FOLDER = config["output_folder"]
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# Load the model
 model = AutoModelForImageSegmentation.from_pretrained("briaai/RMBG-1.4", trust_remote_code=True)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model.to(device)
@@ -31,18 +29,17 @@ def preprocess_image(im: np.ndarray, model_input_size: list) -> torch.Tensor:
     if len(im.shape) < 3:
         im = im[:, :, np.newaxis]
     
-    # Use uint8 for efficiency and normalize later
     im_tensor = torch.from_numpy(im).permute(2, 0, 1).to(torch.uint8)
     im_tensor = TF.resize(im_tensor, model_input_size, interpolation=TF.InterpolationMode.BILINEAR)
-    im_tensor = im_tensor.to(torch.float32) / 255.0  # Normalize
+    im_tensor = im_tensor.to(torch.float32) / 255.0
     im_tensor = normalize(im_tensor, [0.5, 0.5, 0.5], [1.0, 1.0, 1.0])
 
-    return im_tensor.unsqueeze(0).to(device)  # Add batch dimension and move to GPU
+    return im_tensor.unsqueeze(0).to(device)
 
 def postprocess_image(result: torch.Tensor, im_size: list) -> np.ndarray:
     """Postprocess the model's output to create a mask."""
     result = torch.squeeze(F.interpolate(result, size=im_size, mode='bilinear'), 0)
-    result = result.clamp(0, 1)  # Faster than manual min-max normalization
+    result = result.clamp(0, 1)  
     im_array = (result * 255).permute(1, 2, 0).cpu().numpy().astype(np.uint8)
     im_array = np.squeeze(im_array)
     
@@ -51,13 +48,13 @@ def postprocess_image(result: torch.Tensor, im_size: list) -> np.ndarray:
 def remove_background(image_path, output_path):
     """Remove the background from an image and save the result."""
     try:
-        start_time = time.time()  # Start timing
+        start_time = time.time() 
         
         orig_image = Image.open(image_path).convert("RGB")
         orig_im = np.array(orig_image)
         orig_im_size = orig_im.shape[0:2]
 
-        model_input_size = [1024, 1024]  # Adjust based on model requirements
+        model_input_size = [1024, 1024]
         image = preprocess_image(orig_im, model_input_size).to(device)
 
         with torch.no_grad():
@@ -73,7 +70,7 @@ def remove_background(image_path, output_path):
         output_path = os.path.splitext(output_path)[0] + ".png"
         no_bg_image.save(output_path)
         
-        end_time = time.time()  # End timing
+        end_time = time.time()
         processing_time = end_time - start_time
         print(f"Processed and saved: {output_path} in {processing_time:.2f} seconds")
     
@@ -98,7 +95,7 @@ def start_monitoring():
     print(f"Monitoring folder: {INPUT_FOLDER}")
     try:
         while True:
-            time.sleep(1)  # Add a small delay to reduce CPU usage
+            time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
