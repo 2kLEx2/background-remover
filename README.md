@@ -15,3 +15,13 @@ This Python script automatically removes the background from images using the RM
 Install the required dependencies:
    ```bash
    pip install -r requirements.txt
+
+Usage
+edit the config.json that it points to your screenshot foder and configurate the output folder.
+
+Run the script:
+
+bash
+Copy
+python image_processor.py
+The script will monitor the input folder for new images. When a new image is detected, it will process the image, remove the background, and save the result in the output folder as a PNG file with transparency.
