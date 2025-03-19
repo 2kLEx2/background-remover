@@ -9,19 +9,26 @@ This Python script automatically removes the background from images using the RM
 ## Installation
 
 1. Clone this repository:
+   
    ```bash
    git clone https://github.com/2kLEx2/background-remover.git
    cd background-remover
-Install the required dependencies:
+   ```
+
+2. Install the required dependencies:
+   
    ```bash
    pip install -r requirements.txt
+   ```
 
-Usage
-edit the config.json that it points to your screenshot foder and configurate the output folder.
+## Usage
 
-Run the script:
+1. Edit the `config.json` file to set the correct paths for your screenshot folder and output folder.
 
-bash
-Copy
-python image_processor.py
+2. Run the script:
+   
+   ```bash
+   python image_processor.py
+   ```
+
 The script will monitor the input folder for new images. When a new image is detected, it will process the image, remove the background, and save the result in the output folder as a PNG file with transparency.
