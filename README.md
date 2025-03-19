@@ -10,6 +10,8 @@ This Python script automatically removes the background from images using the RM
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/image-background-remover.git
-   cd image-background-remover
+   git clone https://github.com/2kLEx2/background-remover.git
+   cd background-remover
 Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
