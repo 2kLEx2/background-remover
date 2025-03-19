@@ -21,8 +21,55 @@ This Python script automatically removes the background from images using the **
 ```bash
 git clone https://github.com/2kLEx2/background-remover.git
 cd background-remover
-```bash
+```
 
-#2. Install Dependencies
+### 2. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
+```
+
+### 3. Set Up Configuration
+
+Edit the `config.json` file to specify the input and output folders:
+
+```json
+{
+  "input_folder": "path/to/input/folder",
+  "output_folder": "path/to/output/folder"
+}
+```
+
+Replace `"path/to/input/folder"` and `"path/to/output/folder"` with the actual paths on your system.
+
+## Usage
+
+### Running the Script
+
+```bash
+python image_processor.py
+```
+
+The script will monitor the `input_folder` for new images and process them automatically.
+
+### GPU Acceleration
+
+To enable GPU support, ensure you have:
+
+- An **NVIDIA GPU** with CUDA support.
+- **PyTorch with CUDA** installed. If not installed, run:
+
+  ```bash
+  pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+  ```
+
+The script will automatically use the GPU if available; otherwise, it falls back to CPU.
+
+### Processing Images
+
+1. Place images (`.jpg`, `.png`, `.jpeg`) in the `input_folder`.
+2. The script detects new images and removes their backgrounds.
+3. The processed images are saved in the `output_folder` with transparent backgrounds.
+
+---
+
